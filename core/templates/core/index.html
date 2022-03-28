@@ -1,0 +1,188 @@
+{% extends "core/base.html"%}
+{% load static %}
+
+{% block titulo %}Dashboard{% endblock %}
+
+{% block estilos %}
+
+<style>
+
+    .imagenDashboard{
+        width: 200px;
+        height: 140px
+    }
+</style>
+
+{% endblock %}
+{% block tituloNav %}<img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
+                  <h2>TallerAPP - DashBoard</h2>{% endblock  %}
+{% block botonone %}<a href="{%url 'dashboard:talleres'%}" class="btn btn-primary">Todos los Talleres</a>{% endblock %}
+{% block botontwo %}
+{% if usuariodetalles.direccion %}
+<a href="{%url 'dashboard:detail' pk=request.session.usuario.id%}" class="btn btn-success">Tu Perfil</a>
+{% endif %}
+{% endblock %}
+{% block contenido %}
+
+<div class='row'>
+    <div class="container col-10 mt-5">
+        <h2><b>{{request.session.usuario.nombre}},</b> en este espacio puedes actualizar todos tus datos.</h2>
+        <hr>
+    </div>
+</div>
+<div class="container col-12 mt-5">
+        <div class="row mt-5">
+            <div class=" ms-5 me-5 col-md-4">
+                <h3>Editar tus datos Básicos</h3>
+                <hr>
+    
+                <form action="" method="post">
+                
+                    {% csrf_token %}
+                    {{ formRegister.non_field_errors }}
+    
+                    {% for field in formModel %}
+                    <div class="mb-3 row">
+    
+    
+                        <label for="{{ field.id_for_label }}" class="col-sm-3 col-form-label">{{ field.label }}</label>
+                        <div class="col-sm-9">
+                            {{ field }}
+                        </div>
+    
+                        {% if field.errors %}
+    
+                        <div class="alert alert-danger mt-2" role="alert">
+                            {% for error in field.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+    
+                        {% endif %}
+    
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <input type="hidden" name='form' value='basico'>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-warning d-flex mb-2" type="submit">Editar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 ms-5 me-5">
+                <h3>Agrega los datos de tu taller</h3>
+                <hr>
+    
+                <form action="" method="post">
+                
+                    {% csrf_token %}
+                    {{ formLogin.non_field_errors }}
+    
+                    {% for field in formModelDet %}
+                    <div class="mb-3 row">
+    
+    
+                        <label for="{{ field.id_for_label }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
+                        <div class="col-sm-7">
+                            {{ field }}
+                        </div>
+    
+                        {% if field.errors %}
+    
+                        <div class="alert alert-danger mt-2" role="alert">
+                            {% for error in field.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+    
+                        {% endif %}
+    
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <input type="hidden" name='form' value='datos'>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-success d-flex mb-2" type="submit">Actualizar</button>
+                    </div>
+                </form>
+                <h3>Agrega Imágenes</h3>
+                <hr>
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form.media}}
+                    {{form.as_p}}
+                    {{ formLogin.non_field_errors }}
+                    {% for field in formModelImg %}
+                    <div class="mb-3 row">
+                        <label for="{{ field.id_for_label }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
+                        <div class="col-sm-7">
+                            {{ field }}
+                        </div>
+                        {% if field.errors %}
+                        <div class="alert alert-danger mt-2" role="alert">
+                            {% for error in field.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <input type="hidden" name='form' value='imagen'>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-success d-flex mb-2" type="submit">Agregar</button>
+                    </div>
+                </form>
+                {% if imagenes %}
+                <div class='mt-3'>
+                <h3>Tus Imágenes Cargadas</h3>
+                <hr>
+                    {% for imagen in imagenes %}
+                    <div class="d-inline-block">
+                    <a data-fancybox="gallery" href="/media/{{imagen.image}}">
+                        <img class="imagenDashboard border border-danger"src="/media/{{imagen.image}}"></img>
+                    </a>
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <a href="{%url 'dashboard:delete' pk=imagen.id%}" class="btn btn-danger btn-sm d-flex mb-2 mt-1">Eliminar</a>
+                    </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+let places, input, address, city;
+google.maps.event.addDomListener(window, "load", function () {
+
+    var places = new google.maps.places.Autocomplete(
+        document.getElementById("searchTextField")
+    );
+    google.maps.event.addListener(places, "place_changed", function () {
+
+        var place = places.getPlace();
+        console.log(place)
+
+    })
+
+})
+
+Fancybox.bind('[data-fancybox="gallery"]', {
+        infinite: true
+    });
+
+</script>
+
+{% endblock %}

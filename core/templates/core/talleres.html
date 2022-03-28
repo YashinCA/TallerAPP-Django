@@ -1,0 +1,92 @@
+{% extends "core/base.html"%}
+{% load static %}
+{% load l10n %}
+
+{% block titulo %}Todos los Talleres{% endblock %}
+
+{% block estilos %}
+
+<style>
+
+</style>
+
+{% endblock %}
+{% block tituloNav %}<img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
+                  <h2>TallerAPP</h2>{% endblock  %}
+{% block botonone %}<a href="{%url 'dashboard:detail' pk=request.session.usuario.id%}" class="btn btn-success">Tu Perfil</a>{% endblock %}
+{% block botontwo %}<a href="{%url 'dashboard:index'%}" class="btn btn-warning">DashBoard</a>{% endblock %}
+{% block contenido %}
+
+<div class='row'>
+    <div class="container col-10 mt-5">
+        <h3>Encuentra los talleres más cercanos a tu ubicación</h3>
+        <hr>
+    </div>
+</div>
+<div class='row'>
+    <div class="container d-flex col-7 mt-1">
+        <div class="d-flex justify-content-center border-5 border" id='map' style='width: 1000px; height: 600px;'></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+mapboxgl.accessToken = '{{mapboxtoken}}';
+var map = new mapboxgl.Map({
+container: 'map', // container ID
+style: 'mapbox://styles/mapbox/streets-v11', // style URL
+center: [-70.63441111,-33.437], // starting position [lng, lat]
+zoom: 15 // starting zoom
+});
+
+{% for taller in talleres %}
+console.log({{taller.lat}})
+console.log({% localize off %}{{taller.long}}{% endlocalize %})
+var marker = new mapboxgl.Marker()
+.setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
+.setPopup(new mapboxgl.Popup().setHTML("<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><a href='{%url 'dashboard:detail' pk=taller.id%}'>Más detalles</a>"))
+.addTo(map);
+{% endfor %}
+
+//setTimeout(function() {
+//    $(".mapboxgl-ctrl-geolocate").click();
+//},3000);
+map.addControl(
+new MapboxGeocoder({
+accessToken: '{{mapboxtoken}}',
+mapboxgl: mapboxgl
+})
+);
+
+const geolocate = new mapboxgl.GeolocateControl({
+        positionOptions: {
+enableHighAccuracy: true
+},
+// When active the map will receive updates to the device's location as it changes.
+trackUserLocation: true,
+// Draw an arrow next to the location dot to indicate which direction the device is heading.
+showUserHeading: true
+})
+map.addControl(geolocate)
+
+map.on('load', function()
+{
+	geolocate.trigger();
+});
+
+geolocate.on('geolocate', function()
+{
+
+//Get the updated user location, this returns a javascript object.
+var userlocation = geolocate._lastKnownPosition;
+
+//Your work here - Get coordinates like so
+var lat = userlocation.coords.latitude;
+var lng = userlocation.coords.longitude;
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "core/base.html"%}
+{% load static %}
+
+{% block titulo %}Dashboard{% endblock %}
+
+{% block estilos %}
+
+<style>
+
+    .imagenesPerfil{
+        width: 525px;
+    }
+    .iconos{
+        width: 50px;
+    }
+</style>
+
+{% endblock %}
+{% block tituloNav %}<img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
+                  <h2>TallerAPP</h2>{% endblock  %}
+{% block botonone %}<a href="{%url 'dashboard:talleres'%}" class="btn btn-primary">Todos los Talleres</a>{% endblock %}
+{% block botontwo %}<a href="{%url 'dashboard:index'%}" class="btn btn-warning">DashBoard</a>{% endblock %}
+{% block contenido %}
+
+<div class='row rowbienvenida'>
+    <div class="container col-10 mt-5">
+        <h2>Taller <b>{{taller.nombre_taller}}</b></h2>
+        <hr>
+    </div>
+</div>
+<div class='row'>
+        <div class="body-left col-3">
+            <h3>Datos del taller:</h3>
+            <hr>
+            <h5><b>Dueño:</b> {{taller.nombre}} {{taller.apellido}}</h5>
+            <h5><b>Dirección:</b> {{taller.direccion}}</h5>
+            <div class='mt-3'>
+                <h3>Ubicación:</h3>
+                <hr>
+                <div id='map' class="border border-3 ms-3" style='width: 600px; height: 350px;'></div>
+            </div>
+
+        </div>
+        <div class="col-3 body-right">
+            <h3>Imágenes</h3>
+            <hr>
+            <div class="slider">
+                    {% for imagen in imagenes %}
+                    <div>
+                        <img class="imagenesPerfil" src="/media/{{imagen.image}}"></img>
+                    </div>
+                    {% endfor %}
+            </div>
+            {% if taller.instagram or taller.facebook or taller.telefono %}
+            <h3>Redes Sociales</h3>
+            <hr>
+            <div>
+                {% if taller.instagram %}
+                    <a class="me-2" href="{{taller.instagram}}">
+                        <img class="iconos" src="{% static 'img/instagram.png' %}"></img>
+                    </a>
+                {% endif %}
+                {% if taller.facebook %}
+                    <a class="me-2" href="{{taller.facebook}}">
+                        <img class="iconos" src="{% static 'img/facebook.png' %}"></img>
+                    </a>
+                {% endif %}
+                {% if taller.telefono %}
+                    <a class="me-2" href="{{whatsapp}}">
+                        <img class="iconos" src="{% static 'img/whatsapp.png' %}"></img>
+                    </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $('.slider').bxSlider({
+			speed: 900,
+            auto:true,
+        });
+    });
+mapboxgl.accessToken = '{{mapboxtoken}}';
+const map = new mapboxgl.Map({
+container: 'map', // container ID
+style: 'mapbox://styles/mapbox/streets-v11', // style URL
+center: [{{long}}, {{lat}}], // starting position [lng, lat]
+zoom: 15 // starting zoom
+});
+// Create a new marker.
+const marker = new mapboxgl.Marker()
+    .setLngLat([{{long}}, {{lat}}])
+    .setPopup(new mapboxgl.Popup().setHTML("<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p>"))
+    .addTo(map);
+
+map.addControl(
+new mapboxgl.GeolocateControl({
+positionOptions: {
+enableHighAccuracy: true
+},
+// When active the map will receive updates to the device's location as it changes.
+trackUserLocation: true,
+// Draw an arrow next to the location dot to indicate which direction the device is heading.
+showUserHeading: true
+})
+);
+
+</script>
+
+{% endblock %}
