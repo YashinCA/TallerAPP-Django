@@ -8,7 +8,6 @@ from acceso.forms import UsuarioForm
 from acceso.models import Usuario
 from core.models import Imagen
 import bcrypt
-# Create your views here.
 
 mapbox_access_token = 'pk.eyJ1IjoieWNhcnJpbGxvIiwiYSI6ImNsMHVjbTBxZTA0bzYza28ydGp4eDNreHgifQ.KDy-xFRWYKKA7pPaBofapg'
 
@@ -56,9 +55,7 @@ class LoginView(View):
 
     def post(self, request):
         print(request.POST)
-
         form = UsuarioForm(request.POST)
-
         if form.is_valid():
             usuario = form.save(commit=False)
             usuario.password = bcrypt.hashpw(
@@ -83,19 +80,14 @@ class LoginView(View):
 
 
 def login(request):
-
     if request.method == 'POST':
-
         form = LoginForm(request.POST)
-
         if form.is_valid():
-
             user = Usuario.objects.filter(Q(username=form.cleaned_data['username']) | Q(
                 email=form.cleaned_data['username'])).first()
             if user:
                 form_password = form.cleaned_data['password']
                 if bcrypt.checkpw(form_password.encode(), user.password.encode()):
-
                     request.session['usuario'] = {
                         'nombre': user.nombre, 'apellido': user.apellido, 'email': user.email, 'username': user.username, 'id': user.id}
                     # return redirect('/')
@@ -106,7 +98,6 @@ def login(request):
             else:
                 messages.error(
                     request, '2Contraseña o Email o Nombre de Usuario INCORRECTO')
-
             return redirect(reverse('acceso:bienvenida'))
         else:
             contexto = {
