@@ -29,23 +29,24 @@ class IndexView(View):
             'formModel': form,
             'formModelDet': form_det,
             'formModelImg': form_img,
+            'formImg': form_img,
             'imagenes': imagenes
         }
         return render(request, 'core/index.html', contexto)
 
     def post(self, request):
         print(request.POST)
-        print(request.POST['form'])
+        print(request.POST)
         usuario_detail = Usuario.objects.get(
             id=request.session['usuario']['id'])
         form = UsuarioFormBasico(request.POST, instance=usuario_detail)
         form_det = UsuarioFormDetalle(request.POST, instance=usuario_detail)
-        form_img = ImageForm(request.FILES)
+        form_img = ImageForm(request.POST, request.FILES)
         print("hola", request.FILES.get('image'))
         image = request.FILES.get('image')
         imagenes = Imagen.objects.all().filter(
             usuario__id=request.session['usuario']['id'])
-        if request.POST['form'] == 'imagen':
+        if len(request.FILES) > 0:
             if imagenes.count() < 3:
                 if form_img.is_valid() and request.FILES.get('image') != None:
                     Imagen.objects.create(image=image, usuario=usuario_detail)

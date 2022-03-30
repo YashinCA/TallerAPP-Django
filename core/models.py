@@ -1,6 +1,7 @@
 from distutils.command.upload import upload
 from django.db import models
 from acceso.models import Usuario
+
 # Create your models here.
 
 
