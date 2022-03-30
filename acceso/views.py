@@ -5,7 +5,9 @@ from django.urls import reverse
 from django.views import View
 from django.contrib import messages
 from acceso.forms import UsuarioForm
+from acceso.forms import ComentarioForm
 from acceso.models import Usuario
+from core.models import ComentarioEvaluacion
 from core.models import Imagen
 import bcrypt
 
@@ -122,9 +124,6 @@ def logout(request):
 class Talleres(View):
     def get(self, request):
         talleres_total = Usuario.objects.all()
-        # for taller in talleres_total:
-        #     print(taller.lat)
-        #     print(taller.long)
         contexto = {
             'talleres': talleres_total,
             'mapboxtoken': mapbox_access_token,
@@ -141,14 +140,29 @@ class Detail(View):
         numeromensaje = f'https://wa.me/{numero}?text=Me%20interesa%20obtener%20mayor%20información%20de%20su%20taller'
         imagenes = Imagen.objects.all().filter(
             usuario__id=pk)
-        # print(usuario_detail.long)
-        # print(type(usuario_detail.lat))
         contexto = {
             'taller': usuario_detail,
             'imagenes': imagenes,
             'whatsapp': numeromensaje,
             'mapboxtoken': mapbox_access_token,
             'lat': str(usuario_detail.lat),
-            'long': str(usuario_detail.long)
+            'long': str(usuario_detail.long),
+            'formComent': ComentarioForm()
         }
         return render(request, 'acceso/perfil.html', contexto)
+
+    def post(self, request, pk):
+        usuario_detail = Usuario.objects.get(
+            id=pk)
+        formComent = ComentarioForm(request.POST)
+        if formComent.is_valid():
+            print('es valido')
+            comentario_recibido = formComent.save(commit=False)
+            comentario_recibido.usuario = usuario_detail
+            comentario_recibido.save()
+            messages.success(request, 'Gracias por tu evaluación!')
+            return redirect(f'/view/{pk}')
+        else:
+            messages.error(request, 'Con errores, solucionar.')
+            # return render(request, 'acceso/perfil.html', {'formComent': formComent})
+            return redirect(f'/view/{pk}')

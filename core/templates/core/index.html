@@ -39,7 +39,7 @@
                 <form action="" method="post">
                 
                     {% csrf_token %}
-                    {{ formRegister.non_field_errors }}
+                    {{ formModel.non_field_errors }}
     
                     {% for field in formModel %}
                     <div class="mb-3 row">

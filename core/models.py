@@ -1,6 +1,8 @@
+from audioop import minmax
 from distutils.command.upload import upload
 from django.db import models
 from acceso.models import Usuario
+from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 
 
@@ -31,5 +33,18 @@ class Imagen(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to='images/')
     usuario = models.ForeignKey(
         Usuario, related_name="images", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class ComentarioEvaluacion(models.Model):
+    usuario = models.ForeignKey(
+        Usuario, related_name="comentarios", on_delete=models.CASCADE)
+    # Despues de comprobar si todo funciona correctamente, cambiar a False
+    nombre = models.CharField(max_length=50, blank=True, null=True)
+    comentario = models.TextField(max_length=350, blank=True, null=True)
+    evaluacion = models.FloatField(
+        validators=[MinValueValidator(1.0), MaxValueValidator(5.0)])
+    # evaluacion = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

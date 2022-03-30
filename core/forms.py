@@ -62,25 +62,6 @@ class UsuarioFormBasico(UsuarioForm):
 
 class ImageForm(forms.ModelForm):
 
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     image = cleaned_data.get('image')
-    #     print(cleaned_data)
-    #     if image:
-    #         imagename = image.image
-    #         print(imagename)
-    #         if imagename.endswith('.jpg'):
-    #             print('File is a jpg')
-    #         else:
-    #             print('File is NOT a jpg')
-    #             raise forms.ValidationError(
-    #                 "Este archivo no es una imagen formato JPG")
-
-    # if not cleaned_data.get('image').endswith('.jpg'):
-    #     raise forms.ValidationError(
-    #         "Las contraseñas no coinciden"
-    #     )
-
     class Meta:
         model = Imagen
         fields = ['image']

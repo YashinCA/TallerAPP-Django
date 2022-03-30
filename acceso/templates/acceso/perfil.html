@@ -1,7 +1,7 @@
 {% extends "acceso/base.html"%}
 {% load static %}
 
-{% block titulo %}Dashboard{% endblock %}
+{% block titulo %}{% endblock %}
 
 {% block estilos %}
 
@@ -13,6 +13,23 @@
     .iconos{
         width: 50px;
     }
+    .theme-krajee-svg .krajee-icon-clear {
+    display: none;
+}
+.caption-badge, .caption-secondary {
+    display: none;
+}
+.theme-krajee-svg.rating-xs .krajee-icon{
+    width: 19px;
+    height: 19px;
+}
+.rating{
+    width: 0px;
+    height: 0px;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
 </style>
 
 {% endblock %}
@@ -44,16 +61,48 @@
 </div>
 <div class='row'>
         <div class="body-left col-3">
-            <h3>Datos del taller:</h3>
-            <hr>
             <h5><b>Dueño:</b> {{taller.nombre}} {{taller.apellido}}</h5>
             <h5><b>Dirección:</b> {{taller.direccion}}</h5>
             <div class='mt-3'>
-                <h3>Ubicación:</h3>
                 <hr>
                 <div id='map' class="border border-3 ms-3" style='width: 600px; height: 350px;'></div>
             </div>
-
+            <hr>
+            <div class='mt-2'>
+                <form action="" method="post">
+                
+                    {% csrf_token %}
+                    {{ formComent.non_field_errors }}
+    
+                    {% for field in formComent %}
+                    <div class="row">
+                        <label for="{{ field.id_for_label }}" class="col-2 col-form-label">{{ field.label }}</label>
+                        <div class="col-8 text-start mt-2 estrellas align-middle">
+                            {{ field }}
+                        </div>
+    
+                        {% if field.errors %}
+    
+                        <div class="alert alert-danger mt-2" role="alert">
+                            {% for error in field.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+    
+                        {% endif %}
+    
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <div class="row">
+                        <div class="col-10 d-flex flex-row-reverse mt-2">
+                            <button class="btn btn-warning offset-3" type="submit">Comentar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
         <div class="col-3 body-right">
             <h3>Imágenes</h3>
@@ -112,7 +161,16 @@ const marker = new mapboxgl.Marker()
     .setPopup(new mapboxgl.Popup().setHTML("<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p>"))
     .addTo(map);
 
+//########################################################
+// initialize with defaults
+$("#input-id").rating();
 
+// with plugin options (do not attach the CSS class "rating" to your input if using this approach)
+$("#input-id").rating({'size':'lg'});
+
+$(document).ready(function(){
+    $('#input-3').rating({displayOnly: true, step: 0.5});
+});
 </script>
 
 {% endblock %}
