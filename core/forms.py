@@ -70,6 +70,4 @@ class ImageForm(forms.ModelForm):
             'image': 'Imagen (máx 2mb):'
         }
 
-        widgets = {
-            'image': forms.FileInput(attrs={'class': 'form-control form-control-sm', 'type': 'file', 'id': 'formFileSm', 'accept': 'images/'}),
-        }
+        
