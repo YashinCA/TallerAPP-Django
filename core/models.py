@@ -48,3 +48,4 @@ class ComentarioEvaluacion(models.Model):
     # evaluacion = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # esto es de prueba para ver si actualiza git
