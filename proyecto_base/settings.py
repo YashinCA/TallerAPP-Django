@@ -130,3 +130,7 @@ MEDIA_URL = 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR / 'media/'
 STATIC_ROOT = BASE_DIR / 'static/'
+
+if os.environ.get('ENVIRONMENT') != 'production':
+    from .local_settings import *
+#NO poner nada bajo esto
