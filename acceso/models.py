@@ -38,3 +38,6 @@ class Usuario(models.Model):
         self.lat = g[0]
         self.long = g[1]
         return super(Usuario, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"
