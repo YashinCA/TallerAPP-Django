@@ -3,6 +3,7 @@ from datetime import date
 from django import forms
 
 from acceso.models import Usuario
+from core.models import ComentarioEvaluacion
 
 import re
 
@@ -70,4 +71,22 @@ class UsuarioForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'type': 'email'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+        }
+
+
+class ComentarioForm(forms.ModelForm):
+    class Meta:
+        model = ComentarioEvaluacion
+        fields = ['evaluacion', 'nombre', 'comentario']
+
+        labels = {
+            'evaluacion': 'Evaluación: ',
+            'nombre': 'Nombre: ',
+            'comentario': 'Comentario: ',
+        }
+
+        widgets = {
+            'evaluacion': forms.TextInput(attrs={'class': 'rating', 'id': 'input-id', 'value': '0', 'type': 'text', 'data-min': '0', 'data-max': '5', 'data-step': '0.5', 'data-size': 'xs', 'name': 'evaluacion', 'tabindex': '-1', 'required': True}),
+            'nombre': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
+            'comentario': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'required': True}),
         }
