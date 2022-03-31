@@ -1,6 +1,7 @@
 from django import forms
 from django.shortcuts import redirect, render
 from django.db.models import Q
+from django.db.models import Avg
 from django.urls import reverse
 from django.views import View
 from django.contrib import messages
@@ -140,14 +141,20 @@ class Detail(View):
         numeromensaje = f'https://wa.me/{numero}?text=Me%20interesa%20obtener%20mayor%20información%20de%20su%20taller'
         imagenes = Imagen.objects.all().filter(
             usuario__id=pk)
+        comentarios = ComentarioEvaluacion.objects.all().filter(usuario__id=pk)
+        promedio_evaluaciones = ComentarioEvaluacion.objects.all().filter(
+            usuario__id=pk).aggregate(Avg('evaluacion'))
         contexto = {
             'taller': usuario_detail,
             'imagenes': imagenes,
+            'comentarios': comentarios,
             'whatsapp': numeromensaje,
             'mapboxtoken': mapbox_access_token,
             'lat': str(usuario_detail.lat),
             'long': str(usuario_detail.long),
-            'formComent': ComentarioForm()
+            'formComent': ComentarioForm(),
+            'promedio': promedio_evaluaciones,
+
         }
         return render(request, 'acceso/perfil.html', contexto)
 

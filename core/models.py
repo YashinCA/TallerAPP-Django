@@ -1,5 +1,3 @@
-from audioop import minmax
-from distutils.command.upload import upload
 from django.db import models
 from acceso.models import Usuario
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -28,6 +26,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 #     created_at = models.DateTimeField(auto_now_add=True)
 #     updated_at = models.DateTimeField(auto_now=True)
 # images: lista de imagenes asociadas a un taller
+# comentarios: lista de comentarios asociados a un taller
 
 class Imagen(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to='images/')
@@ -48,4 +47,3 @@ class ComentarioEvaluacion(models.Model):
     # evaluacion = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # esto es de prueba para ver si actualiza git
