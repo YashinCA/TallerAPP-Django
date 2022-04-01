@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'verify_email.apps.VerifyEmailConfig',
+    'django_email_verification',
     'core',
     'acceso',
     'django.contrib.admin',
@@ -83,6 +85,15 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SANGRID_API_KEY = os.environ.get('SANGRID_API_KEY')
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TILS = True
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SANGRID_API_KEY
+DEFAULT_FROM_EMAIL = 'p.sepulvedamorande@gmail.com'
 
 
 # Password validation
