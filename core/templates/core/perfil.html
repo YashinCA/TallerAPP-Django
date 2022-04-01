@@ -1,5 +1,6 @@
 {% extends "core/base.html"%}
 {% load static %}
+{% load l10n %}
 
 {% block titulo %}Dashboard{% endblock %}
 
@@ -13,6 +14,42 @@
     .iconos{
         width: 50px;
     }
+    .theme-krajee-svg .krajee-icon-clear {
+    display: none;
+}
+.caption-badge, .caption-secondary {
+    display: none;
+}
+.rating{
+    width: 0px;
+    height: 0px;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+.rating-xs{
+    font-size: 0px;
+}
+.estrellas-evaluaciones {
+    position: relative;
+    bottom: 5px;
+    width: 113px;
+    height: 25px;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+.rating-input {
+    display:none !important;
+}
+
+.estrellas-evaluaciones .theme-krajee-svg.rating-xs .krajee-icon{
+    width: 16px;
+    height: 16px;
+}
+.estrellas-evaluaciones .theme-krajee-svg.rating-xs .krajee-icon-clear {
+    width: 16px;
+    height: 16px;
+}
 </style>
 
 {% endblock %}
@@ -39,7 +76,44 @@
                 <hr>
                 <div id='map' class="border border-3 ms-3" style='width: 600px; height: 350px;'></div>
             </div>
-
+            <hr>
+                {% if comentarios %}
+                <h5>Opiniones de Clientes:</h5>
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item border">
+                        <h4 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button p-1 ps-2 collapsed border border-primary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                <div class="d-inline-block me-2">
+                                    <p class="d-inline-block mb-1 mt-1">{{comentarios.count}} calificaciones</p> 
+                                </div>
+                                <div class="d-inline-block m-0 me-2">
+                                    <input id="evaluaciontotal" name="evaluaciontotal" value="{{promedio.evaluacion__avg|unlocalize}}" class="rating-loading bi bi-star d-inline-block" data-size="xs">
+                                </div>
+                                <div class="d-inline-block m-0">
+                                <small><p class="d-inline-block mb-1 mt-1">(Promedio {{promedio.evaluacion__avg|unlocalize|floatformat:1}} Estrellas)</p></small>
+                                </div>
+                            </button>
+                        </h4>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                {%for comentario in comentarios%}
+                                    <div class="d-inline-block">
+                                        <p class="m-0">{{comentario.nombre}} - <small><i>El {{comentario.created_at|date:"d F Y"}}</i></small></p>
+                                    </div>
+                                    <div class="d-inline-block estrellas-evaluaciones m-0">
+                                        <input id="input-{{comentario.id}}" name="input-{{comentario.id}}" value="{{comentario.evaluacion|unlocalize}}" class="rating-loading bi bi-star d-inline-block" data-size="xs">
+                                    </div>
+                                    <div class="d-inline-block m-0">
+                                    <small><p class="d-inline-block mb-1 mt-1">({{comentario.evaluacion|unlocalize}} Estrellas)</p></small>
+                                    </div>
+                                    <li>"{{comentario.comentario}}"</li>
+                                <hr>
+                                {%endfor%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
         </div>
         <div class="col-3 body-right">
             <h3>Imágenes</h3>
@@ -109,7 +183,22 @@ trackUserLocation: true,
 showUserHeading: true
 })
 );
+//########################################################
+// initialize with defaults
+$("#input-id").rating();
 
+// with plugin options (do not attach the CSS class "rating" to your input if using this approach)
+$("#input-id").rating({'size':'lg'});
+
+{%for comentario in comentarios%}
+$(document).ready(function(){
+    $("#input-{{comentario.id}}").rating({displayOnly: true, step: 0.5});
+});
+{%endfor%}
+
+$(document).ready(function(){
+    $('#evaluaciontotal').rating({displayOnly: true, step: 0.01});
+});
 </script>
 
 {% endblock %}

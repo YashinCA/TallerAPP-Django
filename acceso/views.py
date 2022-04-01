@@ -57,7 +57,6 @@ class LoginView(View):
         return render(request, 'acceso/login.html', contexto)
 
     def post(self, request):
-        print(request.POST)
         form = UsuarioForm(request.POST)
         if form.is_valid():
             usuario = form.save(commit=False)
@@ -125,7 +124,16 @@ def logout(request):
 class Talleres(View):
     def get(self, request):
         talleres_total = Usuario.objects.all()
+        lista_evaluaciones = []
+        for taller in talleres_total:
+            identificacion = taller.id
+            evaluacion_promedio = ComentarioEvaluacion.objects.all().filter(
+                usuario__id=taller.id).aggregate(Avg('evaluacion'))
+            if evaluacion_promedio['evaluacion__avg'] != None:
+                lista_evaluaciones.append(
+                    [identificacion, evaluacion_promedio['evaluacion__avg']])
         contexto = {
+            'evaluaciones': lista_evaluaciones,
             'talleres': talleres_total,
             'mapboxtoken': mapbox_access_token,
         }
@@ -163,7 +171,6 @@ class Detail(View):
             id=pk)
         formComent = ComentarioForm(request.POST)
         if formComent.is_valid():
-            print('es valido')
             comentario_recibido = formComent.save(commit=False)
             comentario_recibido.usuario = usuario_detail
             comentario_recibido.save()

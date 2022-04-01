@@ -103,7 +103,7 @@
                                 <input id="evaluaciontotal" name="evaluaciontotal" value="{{promedio.evaluacion__avg|unlocalize}}" class="rating-loading bi bi-star d-inline-block" data-size="xs">
                             </div>
                             <div class="d-inline-block m-0">
-                            <small><p class="d-inline-block mb-1 mt-1">({{promedio.evaluacion__avg|unlocalize}} Estrellas)</p></small>
+                            <small><p class="d-inline-block mb-1 mt-1">(Promedio {{promedio.evaluacion__avg|unlocalize|floatformat:1}} Estrellas)</p></small>
                             </div>
 						</button>
 					</h4>
@@ -114,7 +114,7 @@
                                     <p class="m-0">{{comentario.nombre}} - <small><i>El {{comentario.created_at|date:"d F Y"}}</i></small></p>
                                 </div>
                                 <div class="d-inline-block estrellas-evaluaciones m-0">
-                                    <input id="input-{{comentario.id}}" name="input-{{comentario.id}}" value="{{comentario.evaluacion|unlocalize}}" class="rating-loading bi bi-star probando d-inline-block" data-size="xs">
+                                    <input id="input-{{comentario.id}}" name="input-{{comentario.id}}" value="{{comentario.evaluacion|unlocalize}}" class="rating-loading bi bi-star d-inline-block" data-size="xs">
                                 </div>
                                 <div class="d-inline-block m-0">
                                 <small><p class="d-inline-block mb-1 mt-1">({{comentario.evaluacion|unlocalize}} Estrellas)</p></small>

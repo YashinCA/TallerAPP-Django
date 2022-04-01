@@ -1,9 +1,11 @@
 
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.db.models import Avg
 from acceso.utils.decoradores import login_requerido
 from acceso.models import Usuario
 from .models import Imagen
+from .models import ComentarioEvaluacion
 from acceso.forms import UsuarioForm
 from core.forms import UsuarioFormBasico
 from core.forms import UsuarioFormDetalle
@@ -35,14 +37,11 @@ class IndexView(View):
         return render(request, 'core/index.html', contexto)
 
     def post(self, request):
-        print(request.POST)
-        print(request.POST)
         usuario_detail = Usuario.objects.get(
             id=request.session['usuario']['id'])
         form = UsuarioFormBasico(request.POST, instance=usuario_detail)
         form_det = UsuarioFormDetalle(request.POST, instance=usuario_detail)
         form_img = ImageForm(request.POST, request.FILES)
-        print("hola", request.FILES.get('image'))
         image = request.FILES.get('image')
         imagenes = Imagen.objects.all().filter(
             usuario__id=request.session['usuario']['id'])
@@ -58,7 +57,7 @@ class IndexView(View):
             else:
                 messages.error(request, 'Máximo 3 imágenes.')
                 return redirect(reverse('dashboard:index'))
-        elif request.POST['form'] == 'basico':
+        elif request.POST.get('form') == 'basico':
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Datos Editados Correctamente.')
@@ -66,7 +65,7 @@ class IndexView(View):
             else:
                 messages.error(request, 'Con errores, solucionar.')
                 return redirect(reverse('dashboard:index'))
-        elif request.POST['form'] == 'datos':
+        elif request.POST.get('form') == 'datos':
             if form_det.is_valid():
                 form_det.save()
                 messages.success(
@@ -83,8 +82,6 @@ class IndexView(View):
 class DeleteImage(View):
     def get(self, request, pk):
         imagen_delete = Imagen.objects.get(id=pk)
-        print(imagen_delete.usuario.id)
-        print(request.session['usuario']['id'])
         if request.session['usuario']['id'] == imagen_delete.usuario.id:
             imagen_delete.delete()
             messages.success(request, 'Imagen eliminada correctamente.')
@@ -104,15 +101,18 @@ class Detail(View):
         numeromensaje = f'https://wa.me/{numero}?text=Me%20interesa%20obtener%20mayor%20información%20de%20su%20taller'
         imagenes = Imagen.objects.all().filter(
             usuario__id=pk)
-        print(usuario_detail.long)
-        print(type(usuario_detail.lat))
+        comentarios = ComentarioEvaluacion.objects.all().filter(usuario__id=pk)
+        promedio_evaluaciones = ComentarioEvaluacion.objects.all().filter(
+            usuario__id=pk).aggregate(Avg('evaluacion'))
         contexto = {
             'taller': usuario_detail,
             'imagenes': imagenes,
+            'comentarios': comentarios,
             'whatsapp': numeromensaje,
             'mapboxtoken': mapbox_access_token,
             'lat': str(usuario_detail.lat),
-            'long': str(usuario_detail.long)
+            'long': str(usuario_detail.long),
+            'promedio': promedio_evaluaciones,
         }
         return render(request, 'core/perfil.html', contexto)
 
@@ -120,10 +120,16 @@ class Detail(View):
 class Talleres(View):
     def get(self, request):
         talleres_total = Usuario.objects.all()
+        lista_evaluaciones = []
         for taller in talleres_total:
-            print(taller.lat)
-            print(taller.long)
+            identificacion = taller.id
+            evaluacion_promedio = ComentarioEvaluacion.objects.all().filter(
+                usuario__id=taller.id).aggregate(Avg('evaluacion'))
+            if evaluacion_promedio['evaluacion__avg'] != None:
+                lista_evaluaciones.append(
+                    [identificacion, evaluacion_promedio['evaluacion__avg']])
         contexto = {
+            'evaluaciones': lista_evaluaciones,
             'talleres': talleres_total,
             'mapboxtoken': mapbox_access_token,
         }

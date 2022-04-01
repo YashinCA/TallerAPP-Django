@@ -41,14 +41,14 @@ center: [-70.63441111,-33.437], // starting position [lng, lat]
 zoom: 15 // starting zoom
 });
 
-{% for taller in talleres %}
-console.log({{taller.lat}})
-console.log({% localize off %}{{taller.long}}{% endlocalize %})
-var marker = new mapboxgl.Marker()
-.setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
-.setPopup(new mapboxgl.Popup().setHTML("<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><a href='{%url 'dashboard:detail' pk=taller.id%}'>Más detalles</a>"))
-.addTo(map);
-{% endfor %}
+//{% for taller in talleres %}
+//console.log({{taller.lat}})
+//console.log({% localize off %}{{taller.long}}{% endlocalize %})
+//var marker = new mapboxgl.Marker()
+//.setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
+//.setPopup(new mapboxgl.Popup().setHTML("<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><a href='{%url 'dashboard:detail' pk=taller.id%}'>Más detalles</a>"))
+//.addTo(map);
+//{% endfor %}
 
 //setTimeout(function() {
 //    $(".mapboxgl-ctrl-geolocate").click();
@@ -86,7 +86,30 @@ var userlocation = geolocate._lastKnownPosition;
 var lat = userlocation.coords.latitude;
 var lng = userlocation.coords.longitude;
 });
+{% for taller in talleres %}
+    {% for evaluacion in evaluaciones %}
+        {% if evaluacion.0 != taller.id %}
+            var marker = new mapboxgl.Marker()
+            .setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
+            .setPopup(new mapboxgl.Popup().setHTML('<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><p>Sin evaluaciones aún</p><a href="{%url "dashboard:detail" pk=taller.id%}">Más detalles</a>'))
+            .addTo(map);
+        {% endif %}
+    {% endfor %}
+{% endfor %}
 
+const star = '<img src="{% static "img/star.png" %}"></img>'
+
+{% for taller in talleres %}
+    {% for evaluacion in evaluaciones %}
+        {% if evaluacion.0 == taller.id %}
+            var cantidad= Math.floor({{evaluacion.1|unlocalize}})
+            var marker = new mapboxgl.Marker()
+            .setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
+            .setPopup(new mapboxgl.Popup().setHTML('<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><p>Evaluacion '+ (star.repeat(cantidad)) +'</p><a href="{%url "dashboard:detail" pk=taller.id%}">Más detalles</a>'))
+            .addTo(map);
+        {% endif %}
+    {% endfor %}
+{% endfor %}
 </script>
 
 {% endblock %}
