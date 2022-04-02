@@ -47,6 +47,8 @@ def welcome(request):
     contexto = {
         'formLogin': LoginForm()
     }
+    if 'usuario' in request.session:
+        del request.session['usuario']
     return render(request, 'acceso/bienvenida.html', contexto)
 
 
@@ -75,9 +77,10 @@ class LoginView(View):
                 usuario.password.encode(), bcrypt.gensalt()).decode()
             #inactive_user = send_verification_email(request, form)
             # inactive_user.cleaned_data['email']
+            usuario.is_active = False
             usuario.save()
             current_site = get_current_site(request)
-            mail_subject = 'Activate your blog account.'
+            mail_subject = 'Activa tu cuenta de Taller APP'
             message = render_to_string('acc_active_email.html', {
                 'user': usuario,
                 'domain': current_site.domain,
@@ -95,7 +98,7 @@ class LoginView(View):
             request.session['usuario'] = {
                 'nombre': user.nombre, 'apellido': user.apellido, 'email': user.email, 'username': user.username, 'id': user.id}
             # return redirect('/')
-            return HttpResponse('Please confirm your email address to complete the registration')
+            return HttpResponse('Por favor confirma tu correo para completar el registro')
         else:
 
             contexto = {
@@ -149,6 +152,7 @@ def logout(request):
 
 class Talleres(View):
     def get(self, request):
+        print('buscando error 1')
         talleres_total = Usuario.objects.all()
         lista_evaluaciones = []
         for taller in talleres_total:
