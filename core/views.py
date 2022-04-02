@@ -15,6 +15,7 @@ from core.forms import Cambiopassword
 from django.views import View
 from django.contrib import messages
 from django.db.models import Q, Count
+from django.contrib.auth.decorators import user_passes_test
 
 mapbox_access_token = 'pk.eyJ1IjoieWNhcnJpbGxvIiwiYSI6ImNsMHVjbTBxZTA0bzYza28ydGp4eDNreHgifQ.KDy-xFRWYKKA7pPaBofapg'
 
@@ -36,7 +37,13 @@ class IndexView(View):
             'formImg': form_img,
             'imagenes': imagenes
         }
-        return render(request, 'core/index.html', contexto)
+        u1= Usuario.objects.get(id=request.session['usuario']['id'])
+        #print(request.session['usuario']['id'])
+        #prit(u1.is_active)
+        if u1.is_active is True:
+            return render(request, 'core/index.html', contexto)
+        else:
+            return redirect(reverse('acceso:bienvenida'))
 
     def post(self, request):
         usuario_detail = Usuario.objects.get(
@@ -117,7 +124,6 @@ class Detail(View):
             'promedio': promedio_evaluaciones,
         }
         return render(request, 'core/perfil.html', contexto)
-
 
 class Talleres(View):
     def get(self, request):
