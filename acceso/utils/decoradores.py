@@ -9,7 +9,7 @@ def login_requerido(function):
 
         if 'usuario' not in request.session:
             messages.error(request, 'No estás logeado')
-            return redirect(reverse('acceso:acceso'))
+            return redirect(reverse('acceso:bienvenida'))
 
         return function(request, *args, **kwargs)
 

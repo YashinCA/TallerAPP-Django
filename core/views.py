@@ -6,10 +6,12 @@ from acceso.utils.decoradores import login_requerido
 from acceso.models import Usuario
 from .models import Imagen
 from .models import ComentarioEvaluacion
+import bcrypt
 from acceso.forms import UsuarioForm
 from core.forms import UsuarioFormBasico
 from core.forms import UsuarioFormDetalle
 from core.forms import ImageForm
+from core.forms import Cambiopassword
 from django.views import View
 from django.contrib import messages
 from django.db.models import Q, Count
@@ -134,3 +136,48 @@ class Talleres(View):
             'mapboxtoken': mapbox_access_token,
         }
         return render(request, 'core/talleres.html', contexto)
+
+
+class CambioPass(View):
+    def get(self, request):
+        form = Cambiopassword()
+        contexto = {
+            'formModel': form,
+        }
+        return render(request, 'core/cambiopass.html', contexto)
+
+    def post(self, request):
+        if request.session['usuario']:
+            form = Cambiopassword(request.POST)
+            if form.is_valid():
+                user = Usuario.objects.filter(Q(username=request.session['usuario']['username']) | Q(
+                    email=request.session['usuario']['email'])).first()
+                if user:
+                    form_password = form.cleaned_data['new_password']
+                    if bcrypt.checkpw(form_password.encode(), user.password.encode()):
+                        if request.POST['password'] == request.POST['confirmar_new_password']:
+                            usuario_form = form.save(commit=False)
+                            nueva_contraseña = bcrypt.hashpw(
+                                usuario_form.password.encode(), bcrypt.gensalt()).decode()
+                            usuario_detail = Usuario.objects.get(
+                                id=request.session['usuario']['id'])
+                            usuario_detail.password = nueva_contraseña
+                            usuario_detail.save()
+                            messages.success(
+                                request, 'Contraseña Actualizada con exito.')
+                            return redirect(reverse('dashboard:index'))
+                        else:
+                            messages.error(
+                                request, 'Las nuevas contraseñas no coinciden.')
+                            return redirect(reverse('dashboard:cambiopass'))
+                    else:
+                        messages.error(
+                            request, 'Contraseña actual no válida.')
+                        return redirect(reverse('dashboard:cambiopass'))
+            else:
+                messages.error(
+                    request, 'Informacion ingresada Con errores, solucionar')
+                return redirect(reverse('dashboard:cambiopass'))
+        else:
+            messages.error(request, 'Tu no estas logeado.')
+            return redirect(reverse('acceso:bienvenida'))
