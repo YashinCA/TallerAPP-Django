@@ -56,9 +56,9 @@ class LoginView(View):
 
     def get(self, request):
 
-        if 'usuario' in request.session:
+        if 'usuario' in request.session and request.session['usuario']['is_active'] == True:
             messages.error(
-                request, 'YA ESTAS LOGEADO. Si quieres salir, CLICK EN SALIR!!')
+                request, 'Ya estas logueado. Si quieres salir, click en SALIR')
             # return redirect('/')
             return redirect(reverse('dashboard:index'))
 
@@ -92,11 +92,11 @@ class LoginView(View):
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            user = Usuario.objects.filter(Q(username=form.cleaned_data['username']) | Q(
-                email=form.cleaned_data['username'])).first()
-            messages.success(request, 'Usuario creado correctamente')
-            request.session['usuario'] = {
-                'nombre': user.nombre, 'apellido': user.apellido, 'email': user.email, 'username': user.username, 'id': user.id}
+            # user = Usuario.objects.filter(Q(username=form.cleaned_data['username']) | Q(
+            #     email=form.cleaned_data['username'])).first()
+            # messages.success(request, 'Usuario creado correctamente')
+            # request.session['usuario'] = {
+            #     'nombre': user.nombre, 'apellido': user.apellido, 'email': user.email, 'username': user.username, 'id': user.id}
             # return redirect('/')
             return HttpResponse('Por favor confirma tu correo para completar el registro')
         else:
@@ -117,19 +117,25 @@ def login(request):
             user = Usuario.objects.filter(Q(username=form.cleaned_data['username']) | Q(
                 email=form.cleaned_data['username'])).first()
             if user:
-                form_password = form.cleaned_data['password']
-                if bcrypt.checkpw(form_password.encode(), user.password.encode()):
-                    request.session['usuario'] = {
-                        'nombre': user.nombre, 'apellido': user.apellido, 'email': user.email, 'username': user.username, 'id': user.id, 'password': user.password}
-                    # return redirect('/')
-                    return redirect(reverse('dashboard:index'))
+                if user.is_active == True:
+                    form_password = form.cleaned_data['password']
+                    if bcrypt.checkpw(form_password.encode(), user.password.encode()):
+                        request.session['usuario'] = {
+                            'nombre': user.nombre, 'apellido': user.apellido, 'email': user.email, 'username': user.username, 'id': user.id, 'password': user.password}
+                        # return redirect('/')
+                        return redirect(reverse('dashboard:index'))
+                    else:
+                        messages.error(
+                            request, 'Contraseña o Usuario Incorrecto')
+                        return redirect(reverse('acceso:bienvenida'))
                 else:
                     messages.error(
-                        request, '1Contraseña o Email o Nombre de Usuario INCORRECTO')
+                        request, 'No has activado tu cuenta, debes hacerlo desde el correo con el que te registraste.')
+                    return redirect(reverse('acceso:bienvenida'))
             else:
                 messages.error(
-                    request, '2Contraseña o Email o Nombre de Usuario INCORRECTO')
-            return redirect(reverse('acceso:bienvenida'))
+                    request, 'Usuario No Existe, Registrate.')
+                return redirect(reverse('acceso:bienvenida'))
         else:
             contexto = {
                 'formRegister': UsuarioForm(),
@@ -223,6 +229,7 @@ def activate(request, uidb64, token):
         user.save()
         # login(request)
         # return redirect('home')
+        messages.success(request, 'Usuario creado correctamente')
         return render(request, 'acceso/confirmacion.html')
     else:
         return HttpResponse('Activation link is invalid!')
