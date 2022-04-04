@@ -90,3 +90,55 @@ class ComentarioForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
             'comentario': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'required': True}),
         }
+
+class forgetPasswordForm(forms.ModelForm):
+
+    # agregar validaciones de email, nombre, apellido, contraseña, telefono
+
+    def clean_nombre(self):
+        username = self.cleaned_data['username']
+        if len(username) < 2:
+            raise forms.ValidationError(
+                'Nombre debe tener minimo 2 caracteres ')
+        return username
+
+    class Meta:
+        model = Usuario
+        fields = [ 'username']
+
+        labels = {
+            'username': 'Nombre Usuario: ',
+        }
+
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+class change_password_Form(forms.ModelForm):
+
+    # agregar validaciones de email, nombre, apellido, contraseña, telefono
+
+    confirmar_password = forms.CharField(
+        label="Confirmar nueva contraseña", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        print(cleaned_data)
+
+        if cleaned_data.get('password') != cleaned_data.get('confirmar_password'):
+            raise forms.ValidationError(
+                "Las contraseñas no coinciden"
+            )
+
+    class Meta:
+        model = Usuario
+        fields = ['password']
+
+        labels = {
+            'password': 'Nueva contraseña: ',
+        }
+
+        widgets = {
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+        }
+

@@ -6,7 +6,7 @@ from django.db.models import Avg
 from django.urls import reverse
 from django.views import View
 from django.contrib import messages
-from acceso.forms import UsuarioForm
+from acceso.forms import UsuarioForm, change_password_Form, forgetPasswordForm
 from acceso.forms import ComentarioForm
 from acceso.models import Usuario
 from core.models import ComentarioEvaluacion
@@ -233,3 +233,58 @@ def activate(request, uidb64, token):
         return render(request, 'acceso/confirmacion.html')
     else:
         return HttpResponse('Activation link is invalid!')
+
+def forgetpassword(request):
+    if request.method == 'GET':
+        contexto = {
+            'forgotPasswordForm': forgetPasswordForm()
+        }
+        return render(request, 'acceso/forget_password.html', contexto)
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        usuario = Usuario.objects.filter(username=username).first()
+        if usuario is None:
+            messages.error(request, 'Usuario no encontrado')
+            return redirect(reverse('acceso:bienvenida'))
+        else:
+            current_site = get_current_site(request)
+            mail_subject = 'Restore your password'
+            message = render_to_string('restore_password.html', {
+                'user': usuario,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(usuario.pk)),
+                'token': account_activation_token.make_token(usuario),
+            })
+            to_email = usuario.email
+            email = EmailMessage(
+                mail_subject, message, to=[to_email]
+            )
+            email.send()
+            messages.success(request, 'Correo electrónico enviado')
+            return HttpResponse('Por favor revisa tu correo para recuperar contraseña')
+
+def restore_password(request, uidb64, token):
+    if request.method == 'GET':
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = Usuario.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            contexto = {
+                'change_password_Form': change_password_Form(),
+                'usuario' : user,
+            }
+        return render(request, 'acceso/restablecer_password.html', contexto)
+    
+    if request.method == 'POST':
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = Usuario.objects.get(pk=uid)
+        user.password = request.POST.get('password')
+        user.password = bcrypt.hashpw(
+                user.password.encode(), bcrypt.gensalt()).decode()
+        user.save()
+        messages.success(request, 'Clave actualizada con éxtito')
+        return redirect(reverse('acceso:bienvenida'))
+
