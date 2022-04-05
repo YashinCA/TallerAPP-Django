@@ -83,7 +83,8 @@ class LoginView(View):
             # request.session['usuario'] = {
             #     'nombre': user.nombre, 'apellido': user.apellido, 'email': user.email, 'username': user.username, 'id': user.id}
             # return redirect('/')
-            return HttpResponse('Por favor confirma tu correo para completar el registro')
+            # return HttpResponse('Por favor confirma tu correo para completawdasdasr el registro')
+            return render(request, 'acceso/verificacion.html')
         else:
 
             contexto = {
@@ -249,8 +250,9 @@ def forgetpassword(request):
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            messages.success(request, 'Correo electrónico enviado')
-            return HttpResponse('Por favor revisa tu correo para recuperar contraseña')
+            # messages.success(request, 'Correo electrónico enviado')
+            # return HttpResponse('Por favor revisa tu correo para recuperar contraseña')
+            return render(request, 'acceso/recuperacion.html')
 
 
 def restore_password(request, uidb64, token):
