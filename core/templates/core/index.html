@@ -19,7 +19,7 @@
 {% block botonone %}<a href="{%url 'dashboard:talleres'%}" class="btn btn-primary" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px" >Todos los Talleres</a>{% endblock %}
 {% block botontwo %}
 {% if usuariodetalles.direccion %}
-<a href="{%url 'dashboard:detail' pk=request.session.usuario.id%}" class="btn btn-success">Tu Perfil</a>
+<a href="{%url 'dashboard:detail' pk=request.session.usuario.id%}" class="btn btn-success" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Tu Perfil</a>
 {% endif %}
 {% endblock %}
 {% block contenido %}
