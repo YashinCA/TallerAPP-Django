@@ -6,8 +6,10 @@ from django.db.models import Avg
 from django.urls import reverse
 from django.views import View
 from django.contrib import messages
-from acceso.forms import UsuarioForm, change_password_Form, forgetPasswordForm
+from acceso.forms import UsuarioForm, change_password_Form
 from acceso.forms import ComentarioForm
+from acceso.forms import LoginForm
+from acceso.forms import ForgetPass
 from acceso.models import Usuario
 from core.models import ComentarioEvaluacion
 from core.models import Imagen
@@ -24,23 +26,6 @@ from django.core.mail import EmailMessage
 
 
 mapbox_access_token = 'pk.eyJ1IjoieWNhcnJpbGxvIiwiYSI6ImNsMHVjbTBxZTA0bzYza28ydGp4eDNreHgifQ.KDy-xFRWYKKA7pPaBofapg'
-
-
-class LoginForm(forms.Form):
-    username = forms.CharField(
-        label='Usuario',
-        max_length=50,
-        required=True,
-        widget=forms.TextInput(
-            attrs={'class': 'form-control', 'placeholder': 'Usuario o Email'})
-    )
-
-    password = forms.CharField(
-        label='Contraseña',
-        required=True,
-        widget=forms.PasswordInput(
-            attrs={'class': 'form-control', 'placeholder': 'Contraseña'})
-    )
 
 
 def welcome(request):
@@ -81,7 +66,7 @@ class LoginView(View):
             usuario.save()
             current_site = get_current_site(request)
             mail_subject = 'Activa tu cuenta de Taller APP'
-            message = render_to_string('acc_active_email.html', {
+            message = render_to_string('acceso/acc_active_email.html', {
                 'user': usuario,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(usuario.pk)),
@@ -234,23 +219,26 @@ def activate(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
+
 def forgetpassword(request):
     if request.method == 'GET':
         contexto = {
-            'forgotPasswordForm': forgetPasswordForm()
+            'forgotPasswordForm': ForgetPass()
         }
         return render(request, 'acceso/forget_password.html', contexto)
-    
+
     if request.method == 'POST':
         username = request.POST.get('username')
-        usuario = Usuario.objects.filter(username=username).first()
+        # usuario = Usuario.objects.filter(username=username).first()
+        usuario = Usuario.objects.filter(Q(username=username) | Q(
+            email=username)).first()
         if usuario is None:
             messages.error(request, 'Usuario no encontrado')
             return redirect(reverse('acceso:bienvenida'))
         else:
             current_site = get_current_site(request)
             mail_subject = 'Restore your password'
-            message = render_to_string('restore_password.html', {
+            message = render_to_string('acceso/restore_password.html', {
                 'user': usuario,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(usuario.pk)),
@@ -264,6 +252,7 @@ def forgetpassword(request):
             messages.success(request, 'Correo electrónico enviado')
             return HttpResponse('Por favor revisa tu correo para recuperar contraseña')
 
+
 def restore_password(request, uidb64, token):
     if request.method == 'GET':
         try:
@@ -274,17 +263,16 @@ def restore_password(request, uidb64, token):
         if user is not None and account_activation_token.check_token(user, token):
             contexto = {
                 'change_password_Form': change_password_Form(),
-                'usuario' : user,
+                'usuario': user,
             }
         return render(request, 'acceso/restablecer_password.html', contexto)
-    
+
     if request.method == 'POST':
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = Usuario.objects.get(pk=uid)
         user.password = request.POST.get('password')
         user.password = bcrypt.hashpw(
-                user.password.encode(), bcrypt.gensalt()).decode()
+            user.password.encode(), bcrypt.gensalt()).decode()
         user.save()
-        messages.success(request, 'Clave actualizada con éxtito')
+        messages.success(request, 'Clave actualizada con éxito')
         return redirect(reverse('acceso:bienvenida'))
-
