@@ -91,28 +91,6 @@ class ComentarioForm(forms.ModelForm):
             'comentario': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'required': True}),
         }
 
-class forgetPasswordForm(forms.ModelForm):
-
-    # agregar validaciones de email, nombre, apellido, contraseña, telefono
-
-    def clean_nombre(self):
-        username = self.cleaned_data['username']
-        if len(username) < 2:
-            raise forms.ValidationError(
-                'Nombre debe tener minimo 2 caracteres ')
-        return username
-
-    class Meta:
-        model = Usuario
-        fields = [ 'username']
-
-        labels = {
-            'username': 'Nombre Usuario: ',
-        }
-
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-        }
 
 class change_password_Form(forms.ModelForm):
 
@@ -142,3 +120,31 @@ class change_password_Form(forms.ModelForm):
             'password': forms.PasswordInput(attrs={'class': 'form-control'}),
         }
 
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        label='Usuario',
+        max_length=50,
+        required=True,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'placeholder': 'Usuario o Email'})
+    )
+
+    password = forms.CharField(
+        label='Contraseña',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control', 'placeholder': 'Contraseña'})
+    )
+
+
+class ForgetPass(LoginForm):
+    password = None
+
+    username = forms.CharField(
+        label='Usuario o Email:',
+        max_length=50,
+        required=True,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'})
+    )
