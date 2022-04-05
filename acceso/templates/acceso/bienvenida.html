@@ -89,10 +89,12 @@
                 <hr>
                 <div class="">
                     <div class="row">
-                        <div class="col-12 d-flex flex-row-reverse">
+                        <div class="col-6 d-inline-flex">
+                            <a href="{% url 'acceso:forgetpassword' %}">¿Olvidaste tu contraseña?</a>
+                        </div>
+                        <div class="col-6 d-inline-flex flex-row-reverse">
                             <button class="btn btn-success" type="submit">Entrar</button>
                             <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-                            <a href="{% url 'acceso:forgetpassword' %}">¿Olvidó su contraseña?</a>
                         </div>
                     </div>
                 </div>

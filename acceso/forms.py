@@ -97,7 +97,7 @@ class change_password_Form(forms.ModelForm):
     # agregar validaciones de email, nombre, apellido, contraseña, telefono
 
     confirmar_password = forms.CharField(
-        label="Confirmar nueva contraseña", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+        label="Confirmar nueva contraseña: ", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     def clean(self):
         cleaned_data = super().clean()
