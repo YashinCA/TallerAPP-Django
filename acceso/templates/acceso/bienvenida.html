@@ -89,10 +89,12 @@
                 <hr>
                 <div class="">
                     <div class="row">
-                        <div class="col-12 d-flex flex-row-reverse">
-                            <button class="btn btn-success" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 100px" type="submit">Entrar</button>
-                            <button type="button" class="btn btn-secondary me-2" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 100px" data-bs-dismiss="modal">Cancelar</button>
-                            <a href="{% url 'acceso:forgetpassword' %}" class="btn btn-secondary me-2"  style="background-color: white; color:#6E7DE4; border-color: white; border-radius:20px; width: 250px" >¿Olvidó su contraseña?</a>
+                        <div class="col-6 d-inline-flex">
+                            <a href="{% url 'acceso:forgetpassword' %}">¿Olvidaste tu contraseña?</a>
+                        </div>
+                        <div class="col-6 d-inline-flex flex-row-reverse">
+                            <button class="btn btn-success" type="submit">Entrar</button>
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
                 </div>
