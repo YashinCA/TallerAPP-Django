@@ -12,9 +12,9 @@
 
 {% endblock %}
 {% block tituloNav %}<img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
-                  <h2>TallerAPP</h2>{% endblock  %}
-{% block botonone %}<a href="{%url 'dashboard:detail' pk=request.session.usuario.id%}" class="btn btn-success">Tu Perfil</a>{% endblock %}
-{% block botontwo %}<a href="{%url 'dashboard:index'%}" class="btn btn-warning">DashBoard</a>{% endblock %}
+                <h2>TallerAPP</h2>{% endblock  %}
+{% block botonone %}<a href="{%url 'dashboard:detail' pk=request.session.usuario.id%}" class="btn btn-success" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Tu Perfil</a>{% endblock %}
+{% block botontwo %}<a href="{%url 'dashboard:index'%}" class="btn btn-warning" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">DashBoard</a>{% endblock %}
 {% block contenido %}
 
 <div class='row'>

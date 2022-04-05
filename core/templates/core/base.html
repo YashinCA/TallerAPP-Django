@@ -33,11 +33,11 @@
 
 <body>
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark text-white">
-  <div class="container-fluid">
-      {% block tituloNav %}{% endblock  %}
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          </ul>
+<div class="container-fluid">
+    {% block tituloNav %}{% endblock  %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        </ul>
             <div class="d-flex me-2">
                 {% block botonone %}{% endblock %}
             </div>
@@ -45,10 +45,10 @@
                 {% block botontwo %}{% endblock %}
             </div>
             <div class="d-flex">
-                <a href="{% url 'acceso:logout' %}" class="btn btn-danger">SALIR</a>
+                <a href="{% url 'acceso:logout' %}" class="btn btn-danger" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">SALIR</a>
             </div>
-      </div>
-  </div>
+    </div>
+</div>
 </nav>
     <div class="main">
         {% block contenido %}{% endblock %}
