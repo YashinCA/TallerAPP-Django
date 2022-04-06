@@ -89,8 +89,8 @@
                 <hr>
                 <div id='map' class="border border-3 ms-3" style='width: 600px; height: 350px;'></div>
             </div>
-            <hr>
             {% if comentarios %}
+            <hr>
             <h5>Opiniones de Clientes:</h5>
             <div class="accordion accordion-flush" id="accordionFlushExample">
 				<div class="accordion-item border">
@@ -174,8 +174,12 @@
                     </div>
                     {% endfor %}
             </div>
+            {% if taller.descripcion %}
+            <hr>
+            <h3>Servicios:</h3>
+            <p>{{taller.descripcion}}</p>
+            {% endif %}
             {% if taller.instagram or taller.facebook or taller.telefono %}
-            <h3>Redes Sociales</h3>
             <hr>
             <div>
                 {% if taller.instagram %}
