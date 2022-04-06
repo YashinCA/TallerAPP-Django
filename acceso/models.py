@@ -24,6 +24,7 @@ class Usuario(models.Model):
     lat = models.FloatField(blank=True, null=True)
     long = models.FloatField(blank=True, null=True)
     password = models.CharField(max_length=72)
+    is_active = models.BooleanField(null=True, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # imagenes: lista de imagenes asociadas a un taller
@@ -38,3 +39,6 @@ class Usuario(models.Model):
         self.lat = g[0]
         self.long = g[1]
         return super(Usuario, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"

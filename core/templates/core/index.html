@@ -16,10 +16,10 @@
 {% endblock %}
 {% block tituloNav %}<img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
                   <h2>TallerAPP - DashBoard</h2>{% endblock  %}
-{% block botonone %}<a href="{%url 'dashboard:talleres'%}" class="btn btn-primary">Todos los Talleres</a>{% endblock %}
+{% block botonone %}<a href="{%url 'dashboard:talleres'%}" class="btn btn-primary" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px" >Todos los Talleres</a>{% endblock %}
 {% block botontwo %}
 {% if usuariodetalles.direccion %}
-<a href="{%url 'dashboard:detail' pk=request.session.usuario.id%}" class="btn btn-success">Tu Perfil</a>
+<a href="{%url 'dashboard:detail' pk=request.session.usuario.id%}" class="btn btn-success" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Tu Perfil</a>
 {% endif %}
 {% endblock %}
 {% block contenido %}
@@ -32,14 +32,13 @@
 </div>
 <div class="container col-12 mt-5">
         <div class="row mt-5">
-            <div class=" ms-5 me-5 col-md-4">
+            <div class=" ms-5 me-5 col-md-4" style="background-color:rgb(224, 212, 253)">
                 <h3>Editar tus datos Básicos</h3>
                 <hr>
-    
                 <form action="" method="post">
                 
                     {% csrf_token %}
-                    {{ formRegister.non_field_errors }}
+                    {{ formModel.non_field_errors }}
     
                     {% for field in formModel %}
                     <div class="mb-3 row">
@@ -67,9 +66,18 @@
                     {% endfor %}
                     <input type="hidden" name='form' value='basico'>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-warning d-flex mb-2" type="submit">Editar</button>
+                        <button class="btn btn-warning d-flex mb-2" type="submit" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 100px; color:white; justify-content:center">   Editar</button>
                     </div>
                 </form>
+                <hr>
+                <div>
+                    <div class="d-inline-block me-4">
+                        <h5>Cambio Contraseña</h5>
+                    </div>
+                    <div class="col-6 d-inline-flex flex-row-reverse mt-2">
+                        <a href="{%url 'dashboard:cambiopass'%}" class="btn btn-primary" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 100px; color:white; justify-content:center">Cambiar</a>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6 ms-5 me-5">
                 <h3>Agrega los datos de tu taller</h3>
@@ -106,38 +114,38 @@
                     {% endfor %}
                     <input type="hidden" name='form' value='datos'>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-success d-flex mb-2" type="submit">Actualizar</button>
+                        <button class="btn btn-success d-flex mb-2" type="submit" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 100px; color:white; justify-content:center">Actualizar</button>
                     </div>
                 </form>
                 <h3>Agrega Imágenes</h3>
                 <hr>
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{form.media}}
-                    {{form.as_p}}
-                    {{ formLogin.non_field_errors }}
-                    {% for field in formModelImg %}
-                    <div class="mb-3 row">
-                        <label for="{{ field.id_for_label }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
-                        <div class="col-sm-7">
-                            {{ field }}
-                        </div>
-                        {% if field.errors %}
-                        <div class="alert alert-danger mt-2" role="alert">
-                            {% for error in field.errors %}
-                            {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        {% if field.help_text %}
-                        <p class="help">{{ field.help_text|safe }}</p>
-                        {% endif %}
-                    </div>
+                    {{ formImg.non_field_errors }}
+
+                    {% for field in formImg %}
+                <div class="mb-3 row">
+
+                <label for="{{ field.id_for_label }}" class="col-sm-3 col-form-label">{{ field.label }}</label>
+                <div class="col-sm-9">
+                    {{ field }}
+                </div>
+                {% if field.errors %}
+                <div class="alert alert-danger mt-2" role="alert">
+                    {% for error in field.errors %}
+                    {{ error }}
                     {% endfor %}
-                    <input type="hidden" name='form' value='imagen'>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-success d-flex mb-2" type="submit">Agregar</button>
-                    </div>
+                </div>
+                {% endif %}
+                {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+                </div>
+                {% endfor %}
+                <div class="col-12 d-flex flex-row-reverse mt-2">
+                    <button class="btn btn-primary offset-3" type="submit" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 100px; color:white; justify-content:center">Agregar</button>
+                </div>
+                </form>
                 </form>
                 {% if imagenes %}
                 <div class='mt-3'>

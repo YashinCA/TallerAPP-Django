@@ -1,7 +1,7 @@
 {% extends "acceso/base.html"%}
 {% load static %}
 
-{% block titulo %}Bienvenida{% endblock %}
+{% block titulo %} - Bienvenida{% endblock %}
 
 
 {% block estilos %}
@@ -17,20 +17,20 @@
 {% block contenido %}
 <div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
-                  <img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
-                  <h1>TallerAPP </h1>
-              </ul>
-              <div class="d-flex">
-                  <a href="{%url 'acceso:acceso'%}" class="btn btn-primary me-2">Registra tu Taller</a>
-              </div>
-              <div class="d-flex">
-                  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
-              </div>
-          </div>
-      </div>
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
+                <img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
+                <h1>TallerAPP </h1>
+            </ul>
+            <div class="d-flex">
+                <a href="{%url 'acceso:acceso'%}" class="btn btn-primary me-2" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Registra tu Taller</a>
+            </div>
+            <div class="d-flex">
+                <button type="button" class="btn btn-secondary" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
+            </div>
+        </div>
+    </div>
     </nav>
 </div>
 
@@ -89,9 +89,12 @@
                 <hr>
                 <div class="">
                     <div class="row">
-                        <div class="col-12 d-flex flex-row-reverse">
-                            <button class="btn btn-success" type="submit">Entrar</button>
-                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                        <div class="col-6 d-inline-flex">
+                            <a href="{% url 'acceso:forgetpassword' %}">¿Olvidaste tu contraseña?</a>
+                        </div>
+                        <div class="col-6 d-inline-flex flex-row-reverse">
+                            <button class="btn btn-success" type="submit" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Entrar</button>
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Cancelar</button>
                         </div>
                     </div>
                 </div>

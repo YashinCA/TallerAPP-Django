@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'verify_email.apps.VerifyEmailConfig',
+    'django_email_verification',
     'core',
     'acceso',
     'django.contrib.admin',
@@ -40,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_cleanup',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +85,15 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SANGRID_API_KEY = os.environ.get('SANGRID_API_KEY')
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TILS = True
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SANGRID_API_KEY
+DEFAULT_FROM_EMAIL = 'p.sepulvedamorande@gmail.com'
 
 
 # Password validation
@@ -130,3 +141,7 @@ MEDIA_URL = 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR / 'media/'
 STATIC_ROOT = BASE_DIR / 'static/'
+
+if os.environ.get('ENVIRONMENT') != 'production':
+    from .local_settings import *
+#NO poner nada bajo esto

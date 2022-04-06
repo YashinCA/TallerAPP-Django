@@ -1,0 +1,38 @@
+{% extends "acceso/base.html"%}
+{% load static %}
+
+
+{% block titulo %} - Verificación{% endblock %}
+
+{% block estilos %}
+
+<style>
+
+</style>
+
+{% endblock %}
+{% block contenido %}
+
+<div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
+                  <img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
+                  <h1>TallerAPP </h1>
+              </ul>
+              <div class="d-flex">
+                  <a href="{%url 'acceso:bienvenida'%}" class="btn btn-success">Inicio</a>
+              </div>
+          </div>
+      </div>
+    </nav>
+</div>
+
+<div class='row'>
+    <div class="container col-8 mt-5 text-center">
+        <h3>Por favor revisa tu correo para validar tu cuenta.</h3>
+    </div>
+</div>
+
+{% endblock %}

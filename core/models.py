@@ -1,6 +1,7 @@
-from distutils.command.upload import upload
 from django.db import models
 from acceso.models import Usuario
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.html import format_html
 # Create your models here.
 
 
@@ -26,6 +27,7 @@ from acceso.models import Usuario
 #     created_at = models.DateTimeField(auto_now_add=True)
 #     updated_at = models.DateTimeField(auto_now=True)
 # images: lista de imagenes asociadas a un taller
+# comentarios: lista de comentarios asociados a un taller
 
 class Imagen(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to='images/')
@@ -33,3 +35,23 @@ class Imagen(models.Model):
         Usuario, related_name="images", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return format_html('<p>{}</p>', f'{self.usuario}') + format_html('<img src="{}" width="100" />', f'{self.image.url}')
+        # return f"Dueño taller: {self.usuario} " + " " + format_html('<img src="{}" />', f'{self.image.url}')
+
+
+class ComentarioEvaluacion(models.Model):
+    usuario = models.ForeignKey(
+        Usuario, related_name="comentarios", on_delete=models.CASCADE)
+    # Despues de comprobar si todo funciona correctamente, cambiar a False
+    nombre = models.CharField(max_length=50, blank=True, null=True)
+    comentario = models.TextField(max_length=350, blank=True, null=True)
+    evaluacion = models.FloatField(
+        validators=[MinValueValidator(1.0), MaxValueValidator(5.0)])
+    # evaluacion = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Dueño taller: {self.usuario}, Comentario de: {self.nombre}, Comentario: {self.comentario}"
