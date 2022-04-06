@@ -2,7 +2,7 @@
 {% load static %}
 {% load l10n %}
 
-{% block titulo %} - Todos los Talleres{% endblock %}
+{% block titulo %}Todos los Talleres{% endblock %}
 
 {% block estilos %}
 
@@ -22,10 +22,10 @@
                   <h1>TallerAPP </h1>
               </ul>
               <div class="d-flex">
-                  <a href="{%url 'acceso:bienvenida'%}" class="btn btn-success"style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Inicio</a>
+                  <a href="{%url 'acceso:bienvenida'%}" class="btn btn-success">Inicio</a>
               </div>
               <div class="d-flex">
-                  <a href="{%url 'acceso:acceso'%}" class="btn btn-primary ms-2 me-2" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px; color:white; justify-content:center">Registra tu Taller</a>
+                  <a href="{%url 'acceso:acceso'%}" class="btn btn-primary ms-2 me-2">Registra tu Taller</a>
               </div>
           </div>
       </div>
@@ -56,15 +56,14 @@ center: [-70.63441111,-33.437], // starting position [lng, lat]
 zoom: 15 // starting zoom
 });
 
-
-//{% for taller in talleres %}
-//var marker = new mapboxgl.Marker()
-//.setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
-//.setPopup(new mapboxgl.Popup().setHTML("<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><a href='{%url 'acceso:detail' pk=taller.id%}'>Más detalles</a>"))
-//.addTo(map);
-//{% endfor %}
-
-
+{% for taller in talleres %}
+console.log({{taller.lat}})
+console.log({% localize off %}{{taller.long}}{% endlocalize %})
+var marker = new mapboxgl.Marker()
+.setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
+.setPopup(new mapboxgl.Popup().setHTML("<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><a href='{%url 'acceso:detail' pk=taller.id%}'>Más detalles</a>"))
+.addTo(map);
+{% endfor %}
 
 //setTimeout(function() {
 //    $(".mapboxgl-ctrl-geolocate").click();
@@ -102,32 +101,6 @@ var userlocation = geolocate._lastKnownPosition;
 var lat = userlocation.coords.latitude;
 var lng = userlocation.coords.longitude;
 });
-
-
-{% for taller in talleres %}
-    {% for evaluacion in evaluaciones %}
-        {% if evaluacion.0 != taller.id %}
-            var marker = new mapboxgl.Marker()
-            .setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
-            .setPopup(new mapboxgl.Popup().setHTML('<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><p>Sin evaluaciones aún</p><a href="{%url "acceso:detail" pk=taller.id%}">Más detalles</a>'))
-            .addTo(map);
-        {% endif %}
-    {% endfor %}
-{% endfor %}
-
-const star = '<img src="{% static "img/star.png" %}"></img>'
-
-{% for taller in talleres %}
-    {% for evaluacion in evaluaciones %}
-        {% if evaluacion.0 == taller.id %}
-            var cantidad= Math.floor({{evaluacion.1|unlocalize}})
-            var marker = new mapboxgl.Marker()
-            .setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
-            .setPopup(new mapboxgl.Popup().setHTML('<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><p>Evaluacion '+ (star.repeat(cantidad)) +'</p><a href="{%url "acceso:detail" pk=taller.id%}">Más detalles</a>'))
-            .addTo(map);
-        {% endif %}
-    {% endfor %}
-{% endfor %}
 
 </script>
 

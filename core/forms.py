@@ -62,6 +62,25 @@ class UsuarioFormBasico(UsuarioForm):
 
 class ImageForm(forms.ModelForm):
 
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     image = cleaned_data.get('image')
+    #     print(cleaned_data)
+    #     if image:
+    #         imagename = image.image
+    #         print(imagename)
+    #         if imagename.endswith('.jpg'):
+    #             print('File is a jpg')
+    #         else:
+    #             print('File is NOT a jpg')
+    #             raise forms.ValidationError(
+    #                 "Este archivo no es una imagen formato JPG")
+
+    # if not cleaned_data.get('image').endswith('.jpg'):
+    #     raise forms.ValidationError(
+    #         "Las contraseñas no coinciden"
+    #     )
+
     class Meta:
         model = Imagen
         fields = ['image']
@@ -72,37 +91,4 @@ class ImageForm(forms.ModelForm):
 
         widgets = {
             'image': forms.FileInput(attrs={'class': 'form-control form-control-sm', 'type': 'file', 'id': 'formFileSm', 'accept': 'images/'}),
-        }
-
-
-class Cambiopassword(forms.ModelForm):
-    confirmar_password = None
-    nombre = None
-    apellido = None
-    username = None
-    email = None
-
-    new_password = forms.CharField(
-        label="Contraseña Actual:", widget=forms.PasswordInput(attrs={'class': 'form-control', 'required': True}))
-    confirmar_new_password = forms.CharField(
-        label="Confirmar Nueva Contraseña:", widget=forms.PasswordInput(attrs={'class': 'form-control', 'required': True}))
-
-    def clean(self):
-        cleaned_data = super().clean()
-        print(cleaned_data)
-
-        if cleaned_data.get('password') != cleaned_data.get('confirmar_new_password'):
-            raise forms.ValidationError(
-                "Las nuevas contraseñas no coinciden"
-            )
-
-    class Meta:
-        model = Usuario
-
-        fields = ['new_password', 'password', 'confirmar_new_password']
-        labels = {
-            'password': 'Nueva Contraseña: ',
-        }
-        widgets = {
-            'password': forms.PasswordInput(attrs={'class': 'form-control', 'required': True}),
         }

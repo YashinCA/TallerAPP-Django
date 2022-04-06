@@ -3,7 +3,6 @@ from datetime import date
 from django import forms
 
 from acceso.models import Usuario
-from core.models import ComentarioEvaluacion
 
 import re
 
@@ -72,79 +71,3 @@ class UsuarioForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control', 'type': 'email'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'}),
         }
-
-
-class ComentarioForm(forms.ModelForm):
-    class Meta:
-        model = ComentarioEvaluacion
-        fields = ['evaluacion', 'nombre', 'comentario']
-
-        labels = {
-            'evaluacion': 'Evaluación: ',
-            'nombre': 'Nombre: ',
-            'comentario': 'Comentario: ',
-        }
-
-        widgets = {
-            'evaluacion': forms.TextInput(attrs={'class': 'rating', 'id': 'input-id', 'value': '0', 'type': 'text', 'data-min': '0', 'data-max': '5', 'data-step': '0.5', 'data-size': 'xs', 'name': 'evaluacion', 'tabindex': '-1', 'required': True}),
-            'nombre': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
-            'comentario': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'required': True}),
-        }
-
-
-class change_password_Form(forms.ModelForm):
-
-    # agregar validaciones de email, nombre, apellido, contraseña, telefono
-
-    confirmar_password = forms.CharField(
-        label="Confirmar nueva contraseña: ", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-
-    def clean(self):
-        cleaned_data = super().clean()
-        print(cleaned_data)
-
-        if cleaned_data.get('password') != cleaned_data.get('confirmar_password'):
-            raise forms.ValidationError(
-                "Las contraseñas no coinciden"
-            )
-
-    class Meta:
-        model = Usuario
-        fields = ['password']
-
-        labels = {
-            'password': 'Nueva contraseña: ',
-        }
-
-        widgets = {
-            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
-        }
-
-
-class LoginForm(forms.Form):
-    username = forms.CharField(
-        label='Usuario',
-        max_length=50,
-        required=True,
-        widget=forms.TextInput(
-            attrs={'class': 'form-control', 'placeholder': 'Usuario o Email'})
-    )
-
-    password = forms.CharField(
-        label='Contraseña',
-        required=True,
-        widget=forms.PasswordInput(
-            attrs={'class': 'form-control', 'placeholder': 'Contraseña'})
-    )
-
-
-class ForgetPass(LoginForm):
-    password = None
-
-    username = forms.CharField(
-        label='Usuario o Email:',
-        max_length=50,
-        required=True,
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'})
-    )

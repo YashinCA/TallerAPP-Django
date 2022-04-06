@@ -10,7 +10,6 @@ from acceso.utils.decoradores import login_requerido
 urlpatterns = [
     path('dashboard/',  decorator_include(login_requerido, include('core.urls'))),
     path('', include('acceso.urls')),
-    path('verification/', include('verify_email.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL,
            document_root=settings.MEDIA_ROOT)
