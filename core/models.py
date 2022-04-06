@@ -1,6 +1,7 @@
 from django.db import models
 from acceso.models import Usuario
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.html import format_html
 # Create your models here.
 
 
@@ -35,6 +36,10 @@ class Imagen(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return format_html('<p>{}</p>', f'{self.usuario}') + format_html('<img src="{}" width="100" />', f'{self.image.url}')
+        # return f"Dueño taller: {self.usuario} " + " " + format_html('<img src="{}" />', f'{self.image.url}')
+
 
 class ComentarioEvaluacion(models.Model):
     usuario = models.ForeignKey(
@@ -47,3 +52,6 @@ class ComentarioEvaluacion(models.Model):
     # evaluacion = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Dueño taller: {self.usuario}, Comentario de: {self.nombre}, Comentario: {self.comentario}"
