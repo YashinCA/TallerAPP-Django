@@ -7,7 +7,6 @@
 *.pyc
 __pycache__/
 local_settings.py
-sendgrid.env
 db.sqlite3
 db.sqlite3-journal
 media

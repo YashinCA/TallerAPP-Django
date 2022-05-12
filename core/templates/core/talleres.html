@@ -41,18 +41,6 @@ center: [-70.63441111,-33.437], // starting position [lng, lat]
 zoom: 15 // starting zoom
 });
 
-//{% for taller in talleres %}
-//console.log({{taller.lat}})
-//console.log({% localize off %}{{taller.long}}{% endlocalize %})
-//var marker = new mapboxgl.Marker()
-//.setLngLat([{% localize off %}{{taller.long}}{% endlocalize %},{% localize off %}{{taller.lat}}{% endlocalize %}])
-//.setPopup(new mapboxgl.Popup().setHTML("<h6>Taller {{taller.nombre_taller}}</h6><p>{{taller.direccion}}</p><a href='{%url 'dashboard:detail' pk=taller.id%}'>Más detalles</a>"))
-//.addTo(map);
-//{% endfor %}
-
-//setTimeout(function() {
-//    $(".mapboxgl-ctrl-geolocate").click();
-//},3000);
 map.addControl(
 new MapboxGeocoder({
 accessToken: '{{mapboxtoken}}',
