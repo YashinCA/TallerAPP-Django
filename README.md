@@ -1,3 +1,3 @@
 #TallerAPP-Django
 
-![Screenshot](TallerAPP-screenshots/screenshot01.png)
+![Screenshot](TallerAPP-screenshots/screenshot01.PNG)
