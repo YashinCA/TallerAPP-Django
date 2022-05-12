@@ -4,6 +4,8 @@ Aplicación que muestra talleres de bicicleta cercanos a la ubicación actual, i
 
 Además se realiza confirmación de cuenta registrada a través de correo eléctronico gracias a la implementacion de Sendgrid. También se utiliza esta herramienta para la recuperación de contraseña.
 
+El usuario dueño de taller en su dashboard tiene posibilidad de editar todos sus datos, cambiar contraseña, subir imágenes de su taller y eliminarlas. Con la ayuda de Places API tiene la posibilidad de agregar su dirección exacta.
+
 Está aplicación tiene posibilidad de ser administrada a través del adminitrador de Django.
 
 Las APIS y plugins utilizados en este proyecto se detallan a continuación:
