@@ -38,7 +38,6 @@ class Imagen(models.Model):
 
     def __str__(self):
         return format_html('<p>{}</p>', f'{self.usuario}') + format_html('<img src="{}" width="100" />', f'{self.image.url}')
-        # return f"Dueño taller: {self.usuario} " + " " + format_html('<img src="{}" />', f'{self.image.url}')
 
 
 class ComentarioEvaluacion(models.Model):

@@ -11,7 +11,5 @@ urlpatterns = [
     path('delete/<int:pk>', DeleteImage.as_view(), name="delete"),
     path('view/<int:pk>', Detail.as_view(), name="detail"),
     path('talleres', login_requerido(Talleres.as_view()), name="talleres"),
-    #path('talleres', Talleres.as_view(), name="talleres"),
-    #REFERENCIA path('dashboard/',  decorator_include(login_requerido, include('core.urls'))),
     path('cambiopass', CambioPass.as_view(), name="cambiopass"),
 ]

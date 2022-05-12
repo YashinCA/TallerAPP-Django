@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.db.models import Q
 from django.db.models import Avg
+from decouple import config
 from django.urls import reverse
 from django.views import View
 from django.contrib import messages
@@ -25,7 +26,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
 
-mapbox_access_token = 'pk.eyJ1IjoieWNhcnJpbGxvIiwiYSI6ImNsMHVjbTBxZTA0bzYza28ydGp4eDNreHgifQ.KDy-xFRWYKKA7pPaBofapg'
+mapbox_access_token = config('mapbox_access_token')
 
 
 def welcome(request):
@@ -33,25 +34,23 @@ def welcome(request):
         'formLogin': LoginForm()
     }
     if 'usuario' in request.session:
-        del request.session['usuario']
+        messages.error(
+            request, 'Ya estas logueado. Si quieres salir, click en SALIR')
+        return redirect(reverse('dashboard:index'))
     return render(request, 'acceso/bienvenida.html', contexto)
 
 
 class LoginView(View):
-
     def get(self, request):
-
-        if 'usuario' in request.session and request.session['usuario']['is_active'] == True:
+        if ('usuario' in request.session):
             messages.error(
                 request, 'Ya estas logueado. Si quieres salir, click en SALIR')
             # return redirect('/')
             return redirect(reverse('dashboard:index'))
-
         contexto = {
             'formRegister': UsuarioForm(),
             'formLogin': LoginForm()
         }
-
         return render(request, 'acceso/login.html', contexto)
 
     def post(self, request):
@@ -60,8 +59,6 @@ class LoginView(View):
             usuario = form.save(commit=False)
             usuario.password = bcrypt.hashpw(
                 usuario.password.encode(), bcrypt.gensalt()).decode()
-            #inactive_user = send_verification_email(request, form)
-            # inactive_user.cleaned_data['email']
             usuario.is_active = False
             usuario.save()
             current_site = get_current_site(request)
@@ -77,21 +74,12 @@ class LoginView(View):
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            # user = Usuario.objects.filter(Q(username=form.cleaned_data['username']) | Q(
-            #     email=form.cleaned_data['username'])).first()
-            # messages.success(request, 'Usuario creado correctamente')
-            # request.session['usuario'] = {
-            #     'nombre': user.nombre, 'apellido': user.apellido, 'email': user.email, 'username': user.username, 'id': user.id}
-            # return redirect('/')
-            # return HttpResponse('Por favor confirma tu correo para completawdasdasr el registro')
             return render(request, 'acceso/verificacion.html')
         else:
-
             contexto = {
                 'formRegister': form,
                 'formLogin': LoginForm()
             }
-
             messages.error(request, 'Con errores, solucionar.')
             return render(request, 'acceso/login.html', contexto)
 
@@ -108,7 +96,6 @@ def login(request):
                     if bcrypt.checkpw(form_password.encode(), user.password.encode()):
                         request.session['usuario'] = {
                             'nombre': user.nombre, 'apellido': user.apellido, 'email': user.email, 'username': user.username, 'id': user.id, 'password': user.password}
-                        # return redirect('/')
                         return redirect(reverse('dashboard:index'))
                     else:
                         messages.error(
@@ -131,14 +118,11 @@ def login(request):
 
 
 def logout(request):
-
     if 'usuario' in request.session:
         messages.success(request, 'SALISTE')
         del request.session['usuario']
     else:
         messages.error(request, 'Tu no estas logeado.')
-
-    # return redirect(reverse('acceso:acceso'))
     return redirect(reverse('acceso:bienvenida'))
 
 
@@ -184,7 +168,6 @@ class Detail(View):
             'long': str(usuario_detail.long),
             'formComent': ComentarioForm(),
             'promedio': promedio_evaluaciones,
-
         }
         return render(request, 'acceso/perfil.html', contexto)
 
@@ -200,7 +183,6 @@ class Detail(View):
             return redirect(f'/view/{pk}')
         else:
             messages.error(request, 'Con errores, solucionar.')
-            # return render(request, 'acceso/perfil.html', {'formComent': formComent})
             return redirect(f'/view/{pk}')
 
 
@@ -213,8 +195,6 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        # login(request)
-        # return redirect('home')
         messages.success(request, 'Usuario creado correctamente')
         return render(request, 'acceso/confirmacion.html')
     else:
@@ -230,7 +210,6 @@ def forgetpassword(request):
 
     if request.method == 'POST':
         username = request.POST.get('username')
-        # usuario = Usuario.objects.filter(username=username).first()
         usuario = Usuario.objects.filter(Q(username=username) | Q(
             email=username)).first()
         if usuario is None:
@@ -250,8 +229,6 @@ def forgetpassword(request):
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            # messages.success(request, 'Correo electrónico enviado')
-            # return HttpResponse('Por favor revisa tu correo para recuperar contraseña')
             return render(request, 'acceso/recuperacion.html')
 
 

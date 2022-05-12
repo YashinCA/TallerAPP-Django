@@ -140,7 +140,6 @@ class LoginForm(forms.Form):
 
 class ForgetPass(LoginForm):
     password = None
-
     username = forms.CharField(
         label='Usuario o Email:',
         max_length=50,
