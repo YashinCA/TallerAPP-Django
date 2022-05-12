@@ -28,7 +28,7 @@
 {% endif %}
 {% endblock %}
 {% block contenido %}
-
+{% block googletoken %}<script src="https://maps.googleapis.com/maps/api/js?key={{googletoken}}&v=3.exp&sensor=false&libraries=places"></script>{% endblock  %}
 <div class='row'>
     <div class="container col-10 mt-5">
         <h2><b>{{request.session.usuario.nombre}},</b> en este espacio puedes actualizar todos tus datos.</h2>

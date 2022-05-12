@@ -38,7 +38,7 @@ class IndexView(View):
             'formModelImg': form_img,
             'formImg': form_img,
             'imagenes': imagenes,
-            'google': google_access_token
+            'googletoken': google_access_token
         }
         u1 = Usuario.objects.get(id=request.session['usuario']['id'])
         if u1.is_active is True:
