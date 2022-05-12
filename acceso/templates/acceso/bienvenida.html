@@ -4,16 +4,6 @@
 {% block titulo %} - Bienvenida{% endblock %}
 
 
-{% block estilos %}
-<style>
-    .logo {
-    width: 50px;
-}
-</style>
-
-{% endblock %}
-
-
 {% block contenido %}
 <div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -34,74 +24,63 @@
     </nav>
 </div>
 
-
-    
 <div class="row rowbienvenida">
-        <div class="col-6 imagenprincipal">
+        <div class="col-4 imagenprincipal">
             <img class="mt-5" src="{% static 'img/imagenprincipal.jpg' %}"></img>
         </div>
-        <div class="col-6 principal-body">
+        <div class="col-3 principal-body">
             <h1 class='titulo'><img class="logotitulo" src="{% static 'img/bicicleta.png' %}"></img>TallerApp</h1>
             <h1 class='subtitulo'>Encuentra los talleres de bicicleta más cercanos, estés donde estés.</h1>
             <a href="{%url 'acceso:talleres'%}" class="btn btn-talleres btn-lg btn-dark">Conoce los Talleres en tu zona</a>
         </div>
-
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Login</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        {% comment %} ... {% endcomment %}
-        <form action="{% url 'acceso:login' %}" method="post">
-            
-                {% csrf_token %}
-                {{ formLogin.non_field_errors }}
-
-                {% for field in formLogin %}
-                <div class="mb-3 row">
-
-
-                    <label for="{{ field.id_for_label }}" class="col-sm-3 col-form-label">{{ field.label }}</label>
-                    <div class="col-sm-9">
-                        {{ field }}
-                    </div>
-
-                    {% if field.errors %}
-
-                    <div class="alert alert-danger mt-2" role="alert">
-                        {% for error in field.errors %}
-                        {{ error }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% comment %} ... {% endcomment %}
+                <form action="{% url 'acceso:login' %}" method="post">
+                        {% csrf_token %}
+                        {{ formLogin.non_field_errors }}
+                        {% for field in formLogin %}
+                        <div class="mb-3 row">
+                            <label for="{{ field.id_for_label }}" class="col-sm-3 col-form-label">{{ field.label }}</label>
+                            <div class="col-sm-9">
+                                {{ field }}
+                            </div>
+                            {% if field.errors %}
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {% for error in field.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% if field.help_text %}
+                            <p class="help">{{ field.help_text|safe }}</p>
+                            {% endif %}
+                        </div>
                         {% endfor %}
-                    </div>
-
-                    {% endif %}
-
-                    {% if field.help_text %}
-                    <p class="help">{{ field.help_text|safe }}</p>
-                    {% endif %}
-                </div>
-                {% endfor %}
-                <hr>
-                <div class="">
-                    <div class="row">
-                        <div class="col-6 d-inline-flex">
-                            <a href="{% url 'acceso:forgetpassword' %}">¿Olvidaste tu contraseña?</a>
+                        <hr>
+                        <div class="">
+                            <div class="row">
+                                <div class="col-6 d-inline-flex">
+                                    <a href="{% url 'acceso:forgetpassword' %}">¿Olvidaste tu contraseña?</a>
+                                </div>
+                                <div class="col-6 d-inline-flex flex-row-reverse">
+                                    <button class="btn btn-success" type="submit" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Entrar</button>
+                                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Cancelar</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-6 d-inline-flex flex-row-reverse">
-                            <button class="btn btn-success" type="submit" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Entrar</button>
-                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Cancelar</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-      </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}
 {% block scripts %}

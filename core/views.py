@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.db.models import Avg
+from decouple import config
 from acceso.utils.decoradores import login_requerido
 from acceso.models import Usuario
 from .models import Imagen
@@ -17,7 +18,8 @@ from django.contrib import messages
 from django.db.models import Q, Count
 from django.contrib.auth.decorators import user_passes_test
 
-mapbox_access_token = 'pk.eyJ1IjoieWNhcnJpbGxvIiwiYSI6ImNsMHVjbTBxZTA0bzYza28ydGp4eDNreHgifQ.KDy-xFRWYKKA7pPaBofapg'
+mapbox_access_token = config('mapbox_access_token')
+google_access_token = config('google_access_token')
 
 
 class IndexView(View):
@@ -35,11 +37,10 @@ class IndexView(View):
             'formModelDet': form_det,
             'formModelImg': form_img,
             'formImg': form_img,
-            'imagenes': imagenes
+            'imagenes': imagenes,
+            'google': google_access_token
         }
-        u1= Usuario.objects.get(id=request.session['usuario']['id'])
-        #print(request.session['usuario']['id'])
-        #prit(u1.is_active)
+        u1 = Usuario.objects.get(id=request.session['usuario']['id'])
         if u1.is_active is True:
             return render(request, 'core/index.html', contexto)
         else:
@@ -124,6 +125,7 @@ class Detail(View):
             'promedio': promedio_evaluaciones,
         }
         return render(request, 'core/perfil.html', contexto)
+
 
 class Talleres(View):
     def get(self, request):

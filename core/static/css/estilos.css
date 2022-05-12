@@ -2,11 +2,20 @@ body {
     background: #ffffff;
 }
 
+.row {
+    --bs-gutter-x: 0rem
+}
+
+.logotitulo {
+    width: 80px;
+}
+
 .principal-body {
     margin: 0px 0px 0px 0px;
-    padding: 225px 250px 0px 280px;
+    padding: 225px 250px 0px 100px;
     text-align: center;
-    width: 990px;
+    width: 50%;
+    height: 100%
 }
 
 .titulo {
@@ -21,10 +30,10 @@ body {
 
 .imagenprincipal {
     margin: 0px 0px 0px 0px;
-    padding: 58px 0px 0px 200px;
+    padding: 58px 0px 0px 150px;
     background-color: #6E7DE4;
-    height: 897px;
-    width: 860px
+    height: 809px;
+    width: 50%
 }
 
 .imagenprincipal img {
@@ -42,7 +51,8 @@ body {
 }
 
 .rowbienvenida {
-    width: 1850px
+    width: 100%;
+    height: 100%
 }
 
 .logo {
@@ -62,19 +72,21 @@ body {
 }
 
 .rowregistro {
-    width: 1932px;
-    height: 897px;
+    width: 100%;
+    height: 809px;
 }
 
 .registro {
     padding: 153px 0px 0px 215px;
     margin: 0px 0px 0px 0px;
+    width: 50%;
 }
 
 .registro-right {
     background-color: #6E7DE4;
     padding: 160px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
+    width: 50%;
 }
 
 .registro-titulo {
@@ -84,8 +96,4 @@ body {
 
 .registro-right h2 {
     margin: 0px 0px 25px 0px;
-}
-
-.logotitulo {
-    width: 80px;
 }

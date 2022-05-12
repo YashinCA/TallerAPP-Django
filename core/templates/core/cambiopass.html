@@ -8,7 +8,7 @@
 
 {% endblock %}
 {% block tituloNav %}<img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
-                  <h2>TallerAPP</h2>{% endblock  %}
+                <h2>TallerAPP</h2>{% endblock  %}
 {% block botonone %}<a href="{%url 'dashboard:talleres'%}" class="btn btn-primary" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">Todos los Talleres</a>{% endblock %}
 {% block botontwo %}<a href="{%url 'dashboard:index'%}" class="btn btn-warning" style="background-color: white; color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px">DashBoard</a>{% endblock %}
 {% block contenido %}
@@ -21,7 +21,6 @@
                 <form action="" method="post">
                     {% csrf_token %}
                     {{ formModel.non_field_errors }}
-    
                     {% for field in formModel %}
                     <div class="mb-3 row">
                         <label for="{{ field.id_for_label }}" class="col-5 col-form-label">{{ field.label }}</label>
@@ -49,28 +48,4 @@
                 </form>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {% endblock %}

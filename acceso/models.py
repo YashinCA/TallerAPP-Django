@@ -1,7 +1,8 @@
 import geocoder
 from django.db import models
+from decouple import config
 
-mapbox_access_token = 'pk.eyJ1IjoieWNhcnJpbGxvIiwiYSI6ImNsMHVjbTBxZTA0bzYza28ydGp4eDNreHgifQ.KDy-xFRWYKKA7pPaBofapg'
+mapbox_access_token = config('mapbox_access_token')
 
 
 class Usuario(models.Model):

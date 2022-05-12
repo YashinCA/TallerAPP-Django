@@ -5,17 +5,17 @@
 {% block contenido %}
 <div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
-                  <img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
-                  <h1>TallerAPP </h1>
-              </ul>
-              <div class="d-flex">
-                  <a href="{%url 'acceso:bienvenida'%}" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px" class="btn btn-success">Inicio</a>
-              </div>
-          </div>
-      </div>
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
+                    <img class="logo" src="{% static 'img/bicicleta.png' %}"></img>
+                    <h1>TallerAPP </h1>
+                </ul>
+                <div class="d-flex">
+                    <a href="{%url 'acceso:bienvenida'%}" style="background-color:#6E7DE4; border-color: #6E7DE4; border-radius:20px; width: 150px" class="btn btn-success">Inicio</a>
+                </div>
+            </div>
+        </div>
     </nav>
 </div>
 
@@ -70,17 +70,6 @@
                 <h2 style="color: white"><i class="fa fa-facebook" aria-hidden="true" style="color:rgb(146, 200, 251)"></i> Dar a conocer tus redes sociales</h2>
                 <h2 style="color: white"><i class="fa fa-comments" aria-hidden="true" style="color:rgb(146, 200, 251)"></i> Recibir feedback y evaluaciones</h2>
                 <h2 style="color: white"><i class="fa fa-heart" aria-hidden="true" style="color:rgb(146, 200, 251)"></i> Pertenecer a una red de talleres y amantes de las bicicletas</h2>
-                
-            <!--<h2>✔️Podrás mostrar tus servicios</h2>
-            <h2>✔️Generar contacto directo con clientes</h2>
-            <h2>✔️Dar a conocer tus redes sociales</h2>
-            <h2>✔️Recibir feedback y evaluaciones</h2>
-            <h2>✔️Pertenecer a una red de talleres y amantes de las bicicletas</h2>
         </div>
     </div>
-{% endblock %}
-{% block scripts %}
-<script>
-</script>
-
 {% endblock %}
