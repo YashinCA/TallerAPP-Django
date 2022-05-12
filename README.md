@@ -20,7 +20,7 @@ Las APIS y plugins utilizados en este proyecto se detallan a continuación:
 
 • Implementación de FancyBox para realizar efecto de aumento en las imagenes en el dashboard de dueño de taller [FancyBox](https://fancyapps.com/docs/ui/quick-start)
 
-• Implementación de evaluación con estrellas a talleres, gracias a Krajee JQuery Plugings [FancyBox](https://github.com/kartik-v/bootstrap-star-rating)
+• Implementación de evaluación con estrellas a talleres, gracias a Krajee JQuery Plugings [Krajee-JQuery-Plugings](https://github.com/kartik-v/bootstrap-star-rating)
 
 
 ![Screenshot](TallerAPP-screenshots/screenshot01.PNG)
